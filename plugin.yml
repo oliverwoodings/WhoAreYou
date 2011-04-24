@@ -1,0 +1,8 @@
+name: WhoAreYou
+main: uk.co.oliwali.WhoAreYou.WhoAreYou
+version: 0.1
+author: oliverw92
+commands:
+  who:
+    description:
+    usage: |
