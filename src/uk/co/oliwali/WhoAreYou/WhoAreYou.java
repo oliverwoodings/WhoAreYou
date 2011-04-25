@@ -78,7 +78,7 @@ public class WhoAreYou extends JavaPlugin {
 								Util.sendMessage(player, "&aWorld: &f" + config.getAliasFromWorld(playerInfo.getWorld()));
 								Util.sendMessage(player, "&aHealth: &f" + playerInfo.getHealth() + "/20");
 								Util.sendMessage(player, "&aGroup: &f" + permissions.getPrefix(playerInfo) + permissions.getGroup(playerInfo));
-								Util.sendMessage(player, "&aOp: &f" + (player.isOp()?"yes":"no"));
+								Util.sendMessage(player, "&aOp: &f" + (playerInfo.isOp()?"yes":"no"));
 								return true;
 							}
 						}
