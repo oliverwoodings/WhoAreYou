@@ -8,6 +8,9 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.Event.Type;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class WhoAreYou extends JavaPlugin {
@@ -15,10 +18,11 @@ public class WhoAreYou extends JavaPlugin {
 	public static String name;
 	public static String version;
 	private Permission permissions;
-	private Config config;
+	public Config config;
+	private WAYPlayerListener playerListener = new WAYPlayerListener(this);
 
 	public void onDisable() {
-		Util.log.info("Version " + version + " disabled!");
+		Util.info("Version " + version + " disabled!");
 	}
 
 	public void onEnable() {
@@ -26,13 +30,25 @@ public class WhoAreYou extends JavaPlugin {
         version = this.getDescription().getVersion();
         config = new Config(this);
         permissions = new Permission(this);
-        Util.log.info("Version " + version + " enabled!");
+        
+        // Register events
+        PluginManager pm = getServer().getPluginManager();
+        pm.registerEvent(Type.PLAYER_JOIN, playerListener, Event.Priority.Monitor, this);
+        
+        Util.info("Version " + version + " enabled!");
 	}
 	
 	private void sendPlayerList(Player sender, String message, List<Player> players) {
 		for (Player player : players.toArray(new Player[0]))
 			message = message + " " + permissions.getPrefix(player) + player.getName();
 		Util.sendMessage(sender, message);
+	}
+	
+	public void who(Player player) {
+		List<Player> players = new ArrayList<Player>();
+		for (World world : getServer().getWorlds().toArray(new World[0]))
+			players.addAll(world.getPlayers());
+		sendPlayerList(player, "&aServer player list &7(" + players.size() + "/" + getServer().getMaxPlayers() + ")&a:&f", players);
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String args[]) {
@@ -61,7 +77,7 @@ public class WhoAreYou extends JavaPlugin {
 								Util.sendMessage(player, "&aLocation: &f" + loc.getX() + ", " + loc.getY() + ", " + loc.getZ());
 								Util.sendMessage(player, "&aWorld: &f" + config.getAliasFromWorld(playerInfo.getWorld()));
 								Util.sendMessage(player, "&aHealth: &f" + playerInfo.getHealth() + "/20");
-								Util.sendMessage(player, "&aGroup: &f" + permissions.getPrefix(player) + permissions.getGroup(player));
+								Util.sendMessage(player, "&aGroup: &f" + permissions.getPrefix(playerInfo) + permissions.getGroup(playerInfo));
 								Util.sendMessage(player, "&aOp: &f" + (player.isOp()?"yes":"no"));
 								return true;
 							}
@@ -70,10 +86,7 @@ public class WhoAreYou extends JavaPlugin {
 				}
 			}
 			else if (permissions.list(player)) {
-				List<Player> players = new ArrayList<Player>();
-				for (World world : getServer().getWorlds().toArray(new World[0]))
-					players.addAll(world.getPlayers());
-				sendPlayerList(player, "&aServer player list &7(" + players.size() + "/" + getServer().getMaxPlayers() + ")&a:&f", players);
+				who(player);
 				return true;
 			}
 		}

@@ -19,10 +19,10 @@ public class Permission {
         if (permissions != null) {
         	permissionPlugin = ((Permissions)permissions).getHandler();
         	handler = PermissionPlugin.PERMISSIONS;
-        	Util.log.info("Using Permissions for user permissions");
+        	Util.info("Using Permissions for user permissions");
         }
         else {
-        	Util.log.info("No permission handler detected, only ops can use commands");
+        	Util.info("No permission handler detected, only ops can use commands");
         }
 	}
 	
@@ -57,7 +57,9 @@ public class Permission {
 					prefix = "&c";
 				break;
 		}
-		return (prefix==""?"&f":prefix);
+		if (prefix.length() == 0)
+			return "&f";
+		return prefix;
 	}
 	
 	public String getGroup(Player player) {

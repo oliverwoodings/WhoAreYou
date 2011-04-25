@@ -7,9 +7,10 @@ import org.bukkit.util.config.Configuration;
 
 public class Config {
 	
-	HashMap<String, String> aliases = new HashMap<String, String>();
-	WhoAreYou plugin;
-	Configuration config;
+	private HashMap<String, String> aliases = new HashMap<String, String>();
+	public WhoAreYou plugin;
+	private Configuration config;
+	public boolean onlineMsg;
 
 	public Config (WhoAreYou instance) {
 		
@@ -24,14 +25,20 @@ public class Config {
 				config.setProperty("aliases." + world.getName(), world.getName());
 		}
 		
+		//Message players on join
+		if (config.getProperty("msg-online-on-join") == null)
+			config.setProperty("msg-online-on-join", true);
+		
 		//Load aliasess into hashmap
 		String[] worlds = (String[]) config.getKeys("aliases").toArray(new String[0]);
 		for (String world : worlds)
 			aliases.put(world, config.getString("aliases." + world));
 		
+		onlineMsg = config.getBoolean("msg-online-on-join", true);
+		
 		//Attempt save
 		if (!config.save())
-			Util.log.severe("Error while writing to config.yml");
+			Util.severe("Error while writing to config.yml");
 
 	}
 	

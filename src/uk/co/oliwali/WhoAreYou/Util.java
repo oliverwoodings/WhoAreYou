@@ -7,8 +7,15 @@ import org.bukkit.entity.Player;
 
 public class Util {
 	
-	public static final Logger log = Logger.getLogger("Minecraft");
+	private static final Logger log = Logger.getLogger("Minecraft");
 	private static int maxLength = 105;
+	
+	public static void info(String msg) {
+		log.info("[DataLog] " + msg);
+	}
+	public static void severe(String msg) {
+		log.severe("[DataLog] " + msg);
+	}
 	
 	public static void sendMessage(Player player, String msg) {
 		int i;
