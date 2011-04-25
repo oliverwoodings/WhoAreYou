@@ -2,74 +2,109 @@ package uk.co.oliwali.WhoAreYou;
 
 import java.util.logging.Logger;
 
-import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public class Util {
 	
 	public static final Logger log = Logger.getLogger("Minecraft");
+	private static int maxLength = 105;
 	
 	public static void sendMessage(Player player, String msg) {
-		msg = replaceColors(msg);
 		int i;
 		String part;
-		String lastColor;
+		CustomColor lastColor = CustomColor.WHITE;
 		for (String line : msg.split("`n")) {
 			i = 0;
 			while (i < line.length()) {
-				if (i+93 <= line.length()) {
-					part = line.substring(i, i+93);
-					if (!line.substring(i+93, 1).equals(" "))
-						part = part.substring(0, part.lastIndexOf(" "));
-				}
-				else
-					part = line.substring(i);
+				part = getMaxString(line.substring(i));
+				if (i+part.length() < line.length() && part.contains(" "))
+					part = part.substring(0, part.lastIndexOf(" "));
+				part = lastColor.getCustom() + part;
+				player.sendMessage(replaceColors(part));
 				lastColor = getLastColor(part);
-				player.sendMessage(lastColor + part);
-				i = i + part.length();
+				i = i + part.length() -1;
 			}
 		}
 	}
 	
-	public static void sendMessage(String level, String msg) {
-		msg = "[" + WhoAreYou.name + "] " + msg;
-		if (level == "info")
-			log.info(msg);
-		else
-			log.severe(msg);
+	public static Location getSimpleLocation(Location location) {
+		location.setX((double)Math.round(location.getX() * 10) / 10);
+		location.setY((double)Math.round(location.getY() * 10) / 10);
+		location.setZ((double)Math.round(location.getZ() * 10) / 10);
+		return location;
 	}
 	
-	private static String getLastColor(String str) {
+	public static String stripColors(String str) {
+		str = str.replaceAll("(?i)\u00A7[0-F]", "");
+		str = str.replaceAll("(?i)&[0-F]", "");
+		return str;
+	}
+	
+	public static CustomColor getLastColor(String str) {
 		int i = 0;
-		String lastColor = ChatColor.WHITE.toString();
-		while (i < str.length()-3) {
-			for (ChatColor color: ChatColor.values()) {
-				if (str.substring(i, i+3) == color.toString())
-					lastColor = color.toString();
+		CustomColor lastColor = CustomColor.WHITE;
+		while (i < str.length()-2) {
+			for (CustomColor color: CustomColor.values()) {
+				if (str.substring(i, i+2).equalsIgnoreCase(color.getCustom()))
+					lastColor = color;
 			}
-			i = i+3;
+			i = i+2;
 		}
 		return lastColor;
 	}
 	
-    private static String replaceColors(String str) {
-        str = str.replace("&c", ChatColor.RED.toString());
-        str = str.replace("&4", ChatColor.DARK_RED.toString());
-        str = str.replace("&e", ChatColor.YELLOW.toString());
-        str = str.replace("&6", ChatColor.GOLD.toString());
-        str = str.replace("&a", ChatColor.GREEN.toString());
-        str = str.replace("&2", ChatColor.DARK_GREEN.toString());
-        str = str.replace("&b", ChatColor.AQUA.toString());
-        str = str.replace("&8", ChatColor.DARK_AQUA.toString());
-        str = str.replace("&9", ChatColor.BLUE.toString());
-        str = str.replace("&1", ChatColor.DARK_BLUE.toString());
-        str = str.replace("&d", ChatColor.LIGHT_PURPLE.toString());
-        str = str.replace("&5", ChatColor.DARK_PURPLE.toString());
-        str = str.replace("&0", ChatColor.BLACK.toString());
-        str = str.replace("&8", ChatColor.DARK_GRAY.toString());
-        str = str.replace("&7", ChatColor.GRAY.toString());
-        str = str.replace("&f", ChatColor.WHITE.toString());
+    public static String replaceColors(String str) {
+    	for (CustomColor color : CustomColor.values())
+    		str = str.replace(color.getCustom(), color.getString());
         return str;
+    }
+    
+    private static String getMaxString(String str) {
+    	for (int i = 0; i < str.length(); i++) {
+    		if (stripColors(str.substring(0, i)).length() == maxLength) {
+    			if (stripColors(str.substring(i, i+1)) == "")
+    				return str.substring(0, i-1);
+    			else
+    				return str.substring(0, i);
+    		}
+    	}
+    	return str;
+    }
+    
+    private enum CustomColor {
+    	
+    	RED("c", 0xC),
+    	DARK_RED("4", 0x4),
+    	YELLOW("e", 0xE),
+    	GOLD("6", 0x6),
+    	GREEN("a", 0xA),
+    	DARK_GREEN("2", 0x2),
+    	AQUA("b", 0xB),
+    	DARK_AQUA("8", 0x8),
+    	BLUE("9", 0x9),
+    	DARK_BLUE("1", 0x1),
+    	LIGHT_PURPLE("d", 0xD),
+    	DARK_PURPLE("5", 0x5),
+    	BLACK("0", 0x0),
+    	DARK_GRAY("8", 0x8),
+    	GRAY("7", 0x7),
+    	WHITE("f", 0xf);
+    	
+    	private String custom;
+    	private int code;
+    	
+    	private CustomColor(String custom, int code) {
+    		this.custom = custom;
+    		this.code = code;
+    	}
+    	public String getCustom() {
+    		return "&" + custom;
+    	}
+    	public String getString() {
+    		return String.format("\u00A7%x", code);
+    	}
+    	
     }
 
 }

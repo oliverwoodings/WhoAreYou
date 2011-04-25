@@ -31,7 +31,7 @@ public class Config {
 		
 		//Attempt save
 		if (!config.save())
-			Util.sendMessage("severe", "Error while writing to config.yml");
+			Util.log.severe("Error while writing to config.yml");
 
 	}
 	

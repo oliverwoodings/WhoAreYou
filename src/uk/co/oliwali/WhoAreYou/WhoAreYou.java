@@ -18,7 +18,7 @@ public class WhoAreYou extends JavaPlugin {
 	private Config config;
 
 	public void onDisable() {
-		Util.sendMessage("info", "Version " + version + " disabled!");
+		Util.log.info("Version " + version + " disabled!");
 	}
 
 	public void onEnable() {
@@ -26,7 +26,7 @@ public class WhoAreYou extends JavaPlugin {
         version = this.getDescription().getVersion();
         config = new Config(this);
         permissions = new Permission(this);
-        Util.sendMessage("info", "Version " + version + " enabled!");
+        Util.log.info("Version " + version + " enabled!");
 	}
 	
 	private void sendPlayerList(Player sender, String message, List<Player> players) {
@@ -55,12 +55,13 @@ public class WhoAreYou extends JavaPlugin {
 					for (World world : getServer().getWorlds().toArray(new World[0])) {
 						for (Player playerInfo : world.getPlayers().toArray(new Player[0])) {
 							if (playerInfo.getName().equalsIgnoreCase(name)) {
-								Location loc = playerInfo.getLocation();
+								Location loc = Util.getSimpleLocation(playerInfo.getLocation());
 								Util.sendMessage(player, "&aPlayer: &f" + playerInfo.getName());
 								Util.sendMessage(player, "&aIP: &f" + playerInfo.getAddress().getAddress().getHostAddress().toString());
 								Util.sendMessage(player, "&aLocation: &f" + loc.getX() + ", " + loc.getY() + ", " + loc.getZ());
 								Util.sendMessage(player, "&aWorld: &f" + config.getAliasFromWorld(playerInfo.getWorld()));
 								Util.sendMessage(player, "&aHealth: &f" + playerInfo.getHealth() + "/20");
+								Util.sendMessage(player, "&aGroup: &f" + permissions.getPrefix(player) + permissions.getGroup(player));
 								Util.sendMessage(player, "&aOp: &f" + (player.isOp()?"yes":"no"));
 								return true;
 							}

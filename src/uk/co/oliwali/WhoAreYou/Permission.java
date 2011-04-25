@@ -10,26 +10,26 @@ public class Permission {
 	
 	private WhoAreYou plugin;
 	private PermissionPlugin handler = PermissionPlugin.OP;
-	private Plugin permissionPlugin;
+	private PermissionHandler permissionPlugin;
 	
 	public Permission(WhoAreYou instance) {
 		plugin = instance;
         Plugin permissions = plugin.getServer().getPluginManager().getPlugin("Permissions");
         
         if (permissions != null) {
-        	permissionPlugin = permissions;
+        	permissionPlugin = ((Permissions)permissions).getHandler();
         	handler = PermissionPlugin.PERMISSIONS;
-        	Util.sendMessage("info", "Using Permissions for user permissions");
+        	Util.log.info("Using Permissions for user permissions");
         }
         else {
-        	Util.sendMessage("info", "No permission handler detected, only ops can use commands");
+        	Util.log.info("No permission handler detected, only ops can use commands");
         }
 	}
 	
 	private boolean hasPermission(Player player, String node) {
 		switch (handler) {
 			case PERMISSIONS:
-				return ((Permissions) permissionPlugin).getHandler().has(player, node);
+				return permissionPlugin.has(player, node);
 			case OP:
 				return player.isOp();
 		}
@@ -47,17 +47,28 @@ public class Permission {
 	}
 	
 	public String getPrefix(Player player) {
+		String prefix = "&f";
 		switch (handler) {
 			case PERMISSIONS:
-				PermissionHandler handler = ((Permissions) permissionPlugin).getHandler();
-				String group = handler.getGroup(player.getWorld().getName(), player.getName());
-				return handler.getGroupPrefix(player.getWorld().getName(), group);
+				prefix = permissionPlugin.getGroupPrefix(player.getWorld().getName(), getGroup(player));
+				break;
 			case OP:
 				if (player.isOp())
-					return "&c";
-				return "&f";
+					prefix = "&c";
+				break;
 		}
-		return null;
+		return (prefix==""?"&f":prefix);
+	}
+	
+	public String getGroup(Player player) {
+		switch (handler) {
+			case PERMISSIONS:
+				return permissionPlugin.getGroup(player.getWorld().getName(), player.getName());
+			case OP:
+				if (player.isOp())
+					return "op";
+		}
+		return "regular";
 	}
 	
 	private enum PermissionPlugin {
