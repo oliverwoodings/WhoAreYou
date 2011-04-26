@@ -1,8 +1,9 @@
 name: WhoAreYou
 main: uk.co.oliwali.WhoAreYou.WhoAreYou
-version: 0.1
+version: 0.11
 author: oliverw92
 commands:
   who:
-    description:
-    usage: |
+    description: List online players
+    aliases: [list,online,playerlist,listplayers,whois]
+    usage: /<command> [world|player] [world]
