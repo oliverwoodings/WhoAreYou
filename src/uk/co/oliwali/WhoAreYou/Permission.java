@@ -50,7 +50,9 @@ public class Permission {
 		String prefix = "&f";
 		switch (handler) {
 			case PERMISSIONS:
-				prefix = permissionPlugin.getGroupPrefix(player.getWorld().getName(), getGroup(player));
+				String permPrefix = permissionPlugin.getGroupPrefix(player.getWorld().getName(), getGroup(player));
+				if (permPrefix != null)
+					prefix = permPrefix;
 				break;
 			case OP:
 				if (player.isOp())

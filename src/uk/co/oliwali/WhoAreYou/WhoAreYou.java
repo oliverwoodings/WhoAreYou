@@ -66,23 +66,27 @@ public class WhoAreYou extends JavaPlugin {
 							return true;
 						}
 					}
+					if (!permissions.player(player))
+						Util.sendMessage(player, "&cNo worlds found that match &7" + name);
 				}
 				if (permissions.player(player)) {
-					for (World world : getServer().getWorlds().toArray(new World[0])) {
-						for (Player playerInfo : world.getPlayers().toArray(new Player[0])) {
-							if (playerInfo.getName().equalsIgnoreCase(name)) {
-								Location loc = Util.getSimpleLocation(playerInfo.getLocation());
-								Util.sendMessage(player, "&aPlayer: &f" + playerInfo.getName());
-								Util.sendMessage(player, "&aIP: &f" + playerInfo.getAddress().getAddress().getHostAddress().toString());
-								Util.sendMessage(player, "&aLocation: &f" + loc.getX() + ", " + loc.getY() + ", " + loc.getZ());
-								Util.sendMessage(player, "&aWorld: &f" + config.getAliasFromWorld(playerInfo.getWorld()));
-								Util.sendMessage(player, "&aHealth: &f" + playerInfo.getHealth() + "/20");
-								Util.sendMessage(player, "&aGroup: &f" + permissions.getPrefix(playerInfo) + permissions.getGroup(playerInfo));
-								Util.sendMessage(player, "&aOp: &f" + (playerInfo.isOp()?"yes":"no"));
-								return true;
-							}
-						}
+					List<Player> matchPlayers = getServer().matchPlayer(name);
+					if (matchPlayers.size() == 1) {
+						Player playerInfo = matchPlayers.get(1);
+						Location loc = Util.getSimpleLocation(playerInfo.getLocation());
+						Util.sendMessage(player, "&aPlayer: &f" + playerInfo.getName());
+						Util.sendMessage(player, "&aIP: &f" + playerInfo.getAddress().getAddress().getHostAddress().toString());
+						Util.sendMessage(player, "&aLocation: &f" + loc.getX() + ", " + loc.getY() + ", " + loc.getZ());
+						Util.sendMessage(player, "&aWorld: &f" + config.getAliasFromWorld(playerInfo.getWorld()));
+						Util.sendMessage(player, "&aHealth: &f" + playerInfo.getHealth() + "/20");
+						Util.sendMessage(player, "&aGroup: &f" + permissions.getPrefix(playerInfo) + permissions.getGroup(playerInfo));
+						Util.sendMessage(player, "&aOp: &f" + (playerInfo.isOp()?"yes":"no"));
+						return true;
 					}
+					if (!permissions.world(player))
+						Util.sendMessage(player, "&cNo unique players found that match &7" + name);
+					else
+						Util.sendMessage(player, "&cNo unique players or worlds found that match &7" + name);
 				}
 			}
 			else if (permissions.list(player)) {
