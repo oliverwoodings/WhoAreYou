@@ -72,7 +72,7 @@ public class WhoAreYou extends JavaPlugin {
 				if (permissions.player(player)) {
 					List<Player> matchPlayers = getServer().matchPlayer(name);
 					if (matchPlayers.size() == 1) {
-						Player playerInfo = matchPlayers.get(1);
+						Player playerInfo = matchPlayers.get(0);
 						Location loc = Util.getSimpleLocation(playerInfo.getLocation());
 						Util.sendMessage(player, "&aPlayer: &f" + playerInfo.getName());
 						Util.sendMessage(player, "&aIP: &f" + playerInfo.getAddress().getAddress().getHostAddress().toString());
