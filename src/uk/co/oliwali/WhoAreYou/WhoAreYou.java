@@ -74,13 +74,14 @@ public class WhoAreYou extends JavaPlugin {
 					if (matchPlayers.size() == 1) {
 						Player playerInfo = matchPlayers.get(0);
 						Location loc = Util.getSimpleLocation(playerInfo.getLocation());
-						Util.sendMessage(player, "&aPlayer: &f" + playerInfo.getName());
-						Util.sendMessage(player, "&aIP: &f" + playerInfo.getAddress().getAddress().getHostAddress().toString());
-						Util.sendMessage(player, "&aLocation: &f" + loc.getX() + ", " + loc.getY() + ", " + loc.getZ());
-						Util.sendMessage(player, "&aWorld: &f" + config.getAliasFromWorld(playerInfo.getWorld()));
-						Util.sendMessage(player, "&aHealth: &f" + playerInfo.getHealth() + "/20");
-						Util.sendMessage(player, "&aGroup: &f" + permissions.getPrefix(playerInfo) + permissions.getGroup(playerInfo));
-						Util.sendMessage(player, "&aOp: &f" + (playerInfo.isOp()?"yes":"no"));
+						Util.sendMessage(player, "&a------------ &7Who -------------");
+						Util.sendMessage(player, "&aPlayer: &7" + playerInfo.getName());
+						Util.sendMessage(player, "&aIP: &7" + playerInfo.getAddress().getAddress().getHostAddress().toString());
+						Util.sendMessage(player, "&aLocation: &7" + loc.getX() + ", " + loc.getY() + ", " + loc.getZ());
+						Util.sendMessage(player, "&aWorld: &7" + config.getAliasFromWorld(playerInfo.getWorld()));
+						Util.sendMessage(player, "&aHealth: &7" + playerInfo.getHealth() + "/20");
+						Util.sendMessage(player, "&aGroup: &7" + permissions.getPrefix(playerInfo) + permissions.getGroup(playerInfo));
+						Util.sendMessage(player, "&aOp: &7" + (playerInfo.isOp()?"yes":"no"));
 						return true;
 					}
 					if (!permissions.world(player))
