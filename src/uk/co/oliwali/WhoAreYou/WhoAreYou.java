@@ -74,7 +74,7 @@ public class WhoAreYou extends JavaPlugin {
 					if (matchPlayers.size() == 1) {
 						Player playerInfo = matchPlayers.get(0);
 						Location loc = Util.getSimpleLocation(playerInfo.getLocation());
-						Util.sendMessage(player, "&a------------ &7Who -------------");
+						Util.sendMessage(player, "&a------------ &7Who &a-------------");
 						Util.sendMessage(player, "&aPlayer: &7" + playerInfo.getName());
 						Util.sendMessage(player, "&aIP: &7" + playerInfo.getAddress().getAddress().getHostAddress().toString());
 						Util.sendMessage(player, "&aLocation: &7" + loc.getX() + ", " + loc.getY() + ", " + loc.getZ());
