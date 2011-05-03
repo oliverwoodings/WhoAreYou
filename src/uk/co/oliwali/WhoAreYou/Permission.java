@@ -64,6 +64,16 @@ public class Permission {
 		return prefix;
 	}
 	
+	public String getSuffix(Player player) {
+		String prefix = "";
+		switch (handler) {
+			case PERMISSIONS:
+				prefix = permissionPlugin.getGroupPrefix(player.getWorld().getName(), getGroup(player));
+				break;
+		}
+		return prefix;
+	}
+	
 	public String getGroup(Player player) {
 		switch (handler) {
 			case PERMISSIONS:

@@ -3,7 +3,7 @@ package uk.co.oliwali.WhoAreYou;
 import java.util.logging.Logger;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 
 public class Util {
 	
@@ -17,7 +17,7 @@ public class Util {
 		log.severe("[DataLog] " + msg);
 	}
 	
-	public static void sendMessage(Player player, String msg) {
+	public static void sendMessage(CommandSender player, String msg) {
 		int i;
 		String part;
 		CustomColor lastColor = CustomColor.WHITE;
