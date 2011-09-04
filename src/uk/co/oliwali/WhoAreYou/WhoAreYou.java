@@ -40,7 +40,7 @@ public class WhoAreYou extends JavaPlugin {
 	
 	private void sendPlayerList(CommandSender sender, String message, List<Player> players) {
 		for (Player player : players.toArray(new Player[0]))
-			message = message + " " + permissions.getPrefix(player) + player.getName() + permissions.getSuffix(player);
+			message = message + " " + permissions.getPrefix(player) + player.getDisplayName() + permissions.getSuffix(player);
 		Util.sendMessage(sender, message);
 	}
 	
