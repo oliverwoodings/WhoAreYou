@@ -11,6 +11,7 @@ public class Config {
 	public WhoAreYou plugin;
 	private Configuration config;
 	public boolean onlineMsg;
+	public boolean tablist;
 
 	public Config (WhoAreYou instance) {
 		
@@ -35,6 +36,7 @@ public class Config {
 			aliases.put(world, config.getString("aliases." + world));
 		
 		onlineMsg = config.getBoolean("msg-online-on-join", true);
+		tablist = config.getBoolean("colour-tab-menu", true);
 		
 		//Attempt save
 		if (!config.save())

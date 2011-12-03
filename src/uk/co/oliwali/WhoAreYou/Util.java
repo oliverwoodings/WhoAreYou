@@ -88,7 +88,7 @@ public class Util {
     	GREEN("a", 0xA),
     	DARK_GREEN("2", 0x2),
     	AQUA("b", 0xB),
-    	DARK_AQUA("8", 0x8),
+    	DARK_GREY("8", 0x8),
     	BLUE("9", 0x9),
     	DARK_BLUE("1", 0x1),
     	LIGHT_PURPLE("d", 0xD),
@@ -98,6 +98,7 @@ public class Util {
     	GRAY("7", 0x7),
     	WHITE("f", 0xf),
     	DARK_AQUA("3", 0x3);
+
     	
     	private String custom;
     	private int code;

@@ -17,7 +17,7 @@ public class WhoAreYou extends JavaPlugin {
 	
 	public static String name;
 	public static String version;
-	private Permission permissions;
+	public Permission permissions;
 	public Config config;
 	private WAYPlayerListener playerListener = new WAYPlayerListener(this);
 
