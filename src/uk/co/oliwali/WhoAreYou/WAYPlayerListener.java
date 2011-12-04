@@ -17,7 +17,11 @@ public class WAYPlayerListener extends PlayerListener {
 			plugin.who(event.getPlayer());
 		if (plugin.config.tablist) {
 			Player player = event.getPlayer();
-					player.setPlayerListName(plugin.permissions.getPrefix(player) + player.getName() + plugin.permissions.getSuffix(player));
+			String prefix = plugin.permissions.getPrefix(player);
+			int lastcolor = prefix.lastIndexOf("&");
+
+			String coloredname = "&" + prefix.charAt(lastcolor + 1) + player.getName();
+					player.setPlayerListName(coloredname.replaceAll("(&([a-f0-9]))", "\u00A7$2"));
 		}
 	}
 	
