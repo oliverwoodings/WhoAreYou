@@ -3,23 +3,36 @@ package uk.co.oliwali.WhoAreYou;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.permission.Permission;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class WhoAreYou extends JavaPlugin {
 	
 	public static String name;
 	public static String version;
-	public Permission permissions;
+	public WAUPermission permissions;
 	public Config config;
 	private WAYPlayerListener playerListener = new WAYPlayerListener(this);
+	public Chat chat;
+	public Permission permission;
+	
+    private Boolean setupPermissions()
+    {
+        RegisteredServiceProvider<net.milkbowl.vault.permission.Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+        if (permissionProvider != null) {
+            permission = permissionProvider.getProvider();
+        }
+        return (permission != null);
+    }
 
 	public void onDisable() {
 		Util.info("Version " + version + " disabled!");
@@ -29,14 +42,27 @@ public class WhoAreYou extends JavaPlugin {
 		name = this.getDescription().getName();
         version = this.getDescription().getVersion();
         config = new Config(this);
-        permissions = new Permission(this);
+        permissions = new WAUPermission(this);
         
         // Register events
         PluginManager pm = getServer().getPluginManager();
-        pm.registerEvent(Type.PLAYER_JOIN, playerListener, Event.Priority.Monitor, this);
+        pm.registerEvents(playerListener, this);
+        
+        setupChat();
+        setupPermissions();
         
         Util.info("Version " + version + " enabled!");
 	}
+	
+	private Boolean setupChat()
+    {
+        RegisteredServiceProvider<Chat> chatProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.chat.Chat.class);
+        if (chatProvider != null) {
+            chat = chatProvider.getProvider();
+        }
+
+        return (chat != null);
+    }
 	
 	private void sendPlayerList(CommandSender sender, String message, List<Player> players) {
 		for (Player player : players.toArray(new Player[0]))
